@@ -1,4 +1,4 @@
-# @benjeau/react-native-draw
+# MrSolimanKing/react-native-draw
 
 [![NPM badge](https://img.shields.io/npm/v/@benjeau/react-native-draw)](https://www.npmjs.com/package/@benjeau/react-native-draw) [![CircleCI Status](https://img.shields.io/circleci/build/gh/BenJeau/react-native-draw)](https://app.circleci.com/pipelines/github/BenJeau/react-native-draw) ![Platform badge](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web-blue)
 
@@ -75,7 +75,7 @@ All of the props are optional
 | `buttonStyle`            | Override the style of the buttons                                                          | `StyleProp`                                    | -                                      |
 | `onPathsChange`          | Callback function when paths change                                                        | (paths: [`PathType`](./src/types.ts)[]) => any | -                                      |
 | `eraserSize`             | Width of eraser (to compensate for path simplification)                                    | `number`                                       | `5`                                    |
-
+| `isBrushActive`          | activate or deactivate the brush                                                           | `boolean`                                      | `false`                                |
 ### DrawInitialValues
 
 | name        | description                                   | type          | default                                                             |
