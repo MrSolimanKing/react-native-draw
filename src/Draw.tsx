@@ -167,7 +167,11 @@ export interface DrawProps {
    * Automatically close the color picker after selecting a color
    */
   autoDismissColorPicker?: boolean;
-
+  /**
+   * activate and deactivate the brush 
+   */
+  isBrushActive?: boolean;
+  
   /**
    * Width of eraser (to compensate for path simplification)
    * @default DEFAULT_ERASER_SIZE
@@ -296,6 +300,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       hideBottom = false,
       simplifyOptions = {},
       autoDismissColorPicker = false,
+      isBrushActive = false,
       eraserSize = DEFAULT_ERASER_SIZE,
     } = {},
     ref
@@ -350,7 +355,9 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     }: PanGestureHandlerGestureEvent) => {
       switch (tool) {
         case DrawingTool.Brush:
-          addPath(x, y);
+          if(isBrushActive){
+            addPath(x, y);
+          }
           break;
         case DrawingTool.Eraser:
           setPaths((p) =>
@@ -446,7 +453,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       nativeEvent: { state, x, y },
     }: PanGestureHandlerStateChangeEvent) => {
       focusCanvas();
-
+    if(isBrushActive){
       if (!colorPickerVisible && tool === DrawingTool.Brush) {
         if (state === State.BEGAN) {
           addPath(x, y);
@@ -464,6 +471,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
           setPath([]);
         }
       }
+     }
     };
 
     const opacityOverlay = animVal.interpolate({
