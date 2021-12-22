@@ -13,9 +13,9 @@ Example application with React Native performance overlay
 ## Installation
 
 ```sh
-npm install @benjeau/react-native-draw
+npm install MrSolimanKing/react-native-draw
 # or
-yarn add @benjeau/react-native-draw
+yarn add MrSolimanKing/react-native-draw
 ```
 
 > Also, you need to install [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler), [@react-native-community/slider](https://github.com/callstack/react-native-slider) and [react-native-svg](https://github.com/react-native-svg/react-native-svg), and follow their installation instructions.
