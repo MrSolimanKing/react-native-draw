@@ -41,7 +41,6 @@ import {
 } from './constants';
 import type { BrushType } from './components/renderer/BrushPreview';
 import { colorButtonSize } from './components/colorPicker/ColorButton';
-import ActionSheet from "react-native-actions-sheet";
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 
@@ -451,7 +450,6 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const [animVal] = useState(new Animated.Value(0));
-    const actionSheetRef = React.createRef();
 
     
     const onHandlerStateChange = ({
@@ -613,10 +611,6 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                   )}
                 </View>
               </View>
-              <ActionSheet gestureEnabled containerStyle={{ backgroundColor: '#3a3b3c' }}  ref={actionSheetRef}>
-                    <View style={{ marginBottom: 20, marginTop: 30, height: 100}}>
-                    </View>
-              </ActionSheet>
               <BrushProperties
                 visible={colorPickerVisible}
                 thickness={thickness}
