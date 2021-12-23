@@ -22,6 +22,7 @@ import {
   PanGestureHandlerGestureEvent,
   PanGestureHandlerStateChangeEvent,
   State,
+  TouchableOpacity,
 } from 'react-native-gesture-handler';
 
 import { createSVGPath } from './utils';
@@ -572,11 +573,19 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               <View style={styles.bottomContent}>
                 <View style={styles.buttonsContainer}>
                   {!viewVisibility.clear && (
-                    <MaterialCommunityIcons onPress={handleClear} name="delete" color="#ea3d3e" size={45} />
+                    <TouchableOpacity 
+                     activeOpacity={.5}
+                    >
+                        <MaterialCommunityIcons onPress={handleClear} name="delete" color="#ea3d3e" size={45} />
+                    </TouchableOpacity>
                   )}
                   {!viewVisibility.undo && (
                     <View style={!viewVisibility.clear && styles.endButton}>
-                      <MaterialCommunityIcons onPress={handleUndo} name="undo" color="#75BD4F" size={45} />
+                      <TouchableOpacity 
+                        activeOpacity={.5}
+                      >
+                          <MaterialCommunityIcons onPress={handleUndo} name="undo" color="#75BD4F" size={45} />
+                      </TouchableOpacity>
                     </View>
                   )}
                 </View>
@@ -591,23 +600,26 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                 <View style={styles.buttonsContainer}>
                   {(!viewVisibility.brushProperties.opacity ||
                     !viewVisibility.brushProperties.size) && (
-                      <MaterialCommunityIcons 
+                      <TouchableOpacity activeOpacity={.5}>
+                        <MaterialCommunityIcons 
                           onPress={handleModeChange} 
                           name={tool === DrawingTool.Brush ? 'brush' : 'eraser-variant'} 
                           color={tool === DrawingTool.Brush ? "#1d9bf0" : "#FFC934"} 
                           size={45} 
                       />
+                      </TouchableOpacity>
                   )}
                   {!viewVisibility.colorPicker && (
-                    <View
-                      style={
-                        (!viewVisibility.brushProperties.opacity ||
-                          !viewVisibility.brushProperties.size) &&
-                        styles.endButton
-                      }
+                    <TouchableOpacity 
+                        activeOpacity={.5}
+                        style={
+                          (!viewVisibility.brushProperties.opacity ||
+                            !viewVisibility.brushProperties.size) &&
+                          styles.endButton
+                        }
                     >
                       <MaterialCommunityIcons name="palette" color="#9766fd" onPress={handleColorPicker} size={45} />
-                    </View>
+                    </TouchableOpacity>
                   )}
                 </View>
               </View>
