@@ -26,9 +26,7 @@ import {
 
 import { createSVGPath } from './utils';
 import { DrawingTool, PathDataType, PathType } from './types';
-import { Brush, Delete, Eraser, Palette, Undo } from './icons';
 import {
-  Button,
   SVGRenderer,
   BrushProperties,
   BrushPreview,
@@ -43,8 +41,12 @@ import {
 } from './constants';
 import type { BrushType } from './components/renderer/BrushPreview';
 import { colorButtonSize } from './components/colorPicker/ColorButton';
+import ActionSheet from "react-native-actions-sheet";
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
 
 export interface DrawInitialValues {
   /**
@@ -221,6 +223,7 @@ interface Visibility {
   };
 }
 
+
 const getVisibility = (hideBottom: boolean | HideBottom): Visibility => {
   if (typeof hideBottom === 'boolean') {
     return {
@@ -353,28 +356,28 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const onGestureEvent = ({
       nativeEvent: { x, y },
     }: PanGestureHandlerGestureEvent) => {
-      switch (tool) {
-        case DrawingTool.Brush:
-          if(isBrushActive){
-            addPath(x, y);
-          }
-          break;
-        case DrawingTool.Eraser:
-          setPaths((p) =>
-            p.reduce((acc: PathType[], i) => {
-              const closeToPath = i.data.some(
-                ([x1, y1]) =>
-                  Math.abs(x1 - x) < i.thickness + eraserSize &&
-                  Math.abs(y1 - y) < i.thickness + eraserSize
-              );
-              if (closeToPath) {
-                return acc;
-              }
-              return [...acc, i];
-            }, [])
-          );
-          break;
-      }
+      if(isBrushActive){
+        switch (tool) {
+          case DrawingTool.Brush:
+              addPath(x, y);
+            break;
+          case DrawingTool.Eraser:
+            setPaths((p) =>
+              p.reduce((acc: PathType[], i) => {
+                const closeToPath = i.data.some(
+                  ([x1, y1]) =>
+                    Math.abs(x1 - x) < i.thickness + eraserSize &&
+                    Math.abs(y1 - y) < i.thickness + eraserSize
+                );
+                if (closeToPath) {
+                  return acc;
+                }
+                return [...acc, i];
+              }, [])
+            );
+            break;
+        }
+     }
     };
 
     const focusCanvas = () => {
@@ -448,7 +451,9 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     };
 
     const [animVal] = useState(new Animated.Value(0));
+    const actionSheetRef = React.createRef();
 
+    
     const onHandlerStateChange = ({
       nativeEvent: { state, x, y },
     }: PanGestureHandlerStateChangeEvent) => {
@@ -569,48 +574,31 @@ const Draw = forwardRef<DrawRef, DrawProps>(
               <View style={styles.bottomContent}>
                 <View style={styles.buttonsContainer}>
                   {!viewVisibility.clear && (
-                    <Button
-                      onPress={handleClear}
-                      color="#81090A"
-                      style={buttonStyle}
-                    >
-                      <Delete fill="#81090A" height={30} width={30} />
-                    </Button>
+                    <MaterialCommunityIcons onPress={handleClear} name="delete" color="#ea3d3e" size={45} />
                   )}
                   {!viewVisibility.undo && (
                     <View style={!viewVisibility.clear && styles.endButton}>
-                      <Button
-                        onPress={handleUndo}
-                        color="#ddd"
-                        style={buttonStyle}
-                      >
-                        <Undo fill="#ddd" height={30} width={30} />
-                      </Button>
+                      <MaterialCommunityIcons onPress={handleUndo} name="undo" color="#75BD4F" size={45} />
                     </View>
                   )}
                 </View>
 
                 <BrushPreview
-                  color={color}
-                  opacity={opacity}
-                  thickness={thickness}
-                  previewType={brushPreview}
+                    color={color}
+                    opacity={opacity}
+                    thickness={thickness}
+                    previewType={brushPreview}
                 />
 
                 <View style={styles.buttonsContainer}>
                   {(!viewVisibility.brushProperties.opacity ||
                     !viewVisibility.brushProperties.size) && (
-                    <Button
-                      onPress={handleModeChange}
-                      color="#ddd"
-                      style={buttonStyle}
-                    >
-                      {tool === DrawingTool.Brush ? (
-                        <Brush fill="#ddd" height={30} width={30} />
-                      ) : (
-                        <Eraser fill="#ddd" height={30} width={30} />
-                      )}
-                    </Button>
+                      <MaterialCommunityIcons 
+                          onPress={handleModeChange} 
+                          name={tool === DrawingTool.Brush ? 'brush' : 'eraser-variant'} 
+                          color={tool === DrawingTool.Brush ? "#1d9bf0" : "#FFC934"} 
+                          size={45} 
+                      />
                   )}
                   {!viewVisibility.colorPicker && (
                     <View
@@ -620,17 +608,15 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                         styles.endButton
                       }
                     >
-                      <Button
-                        onPress={handleColorPicker}
-                        color={color}
-                        style={buttonStyle}
-                      >
-                        <Palette fill={color} height={30} width={30} />
-                      </Button>
+                      <MaterialCommunityIcons name="palette" color="#9766fd" onPress={handleColorPicker} size={45} />
                     </View>
                   )}
                 </View>
               </View>
+              <ActionSheet gestureEnabled containerStyle={{ backgroundColor: '#3a3b3c' }}  ref={actionSheetRef}>
+                    <View style={{ marginBottom: 20, marginTop: 30, height: 100}}>
+                    </View>
+              </ActionSheet>
               <BrushProperties
                 visible={colorPickerVisible}
                 thickness={thickness}
